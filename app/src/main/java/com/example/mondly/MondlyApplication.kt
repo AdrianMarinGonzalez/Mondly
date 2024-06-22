@@ -1,33 +1,22 @@
 package com.example.mondly
 
 import android.app.Application
-import dagger.hilt.EntryPoint
-import dagger.hilt.InstallIn
-import dagger.hilt.android.HiltAndroidApp
-import dagger.hilt.components.SingletonComponent
+import com.example.data.di.getModules
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
 
 
-@HiltAndroidApp
 open class MondlyApplication : Application() {
 
-    /**
-     * Constants
-     */
-    companion object {
-        @JvmStatic
-        lateinit var app: MondlyApplication
-    }
+    val dataModules = getModules(this)
 
-    @EntryPoint
-    @InstallIn(SingletonComponent::class)
-    internal interface DaggerHiltEntryPoint {
-    }
-
-    /**
-     * Application methods
-     */
     override fun onCreate() {
         super.onCreate()
-        app = this
+        startKoin {
+            androidLogger()
+            androidContext(this@MondlyApplication)
+            modules(dataModules)
+        }
     }
 }
