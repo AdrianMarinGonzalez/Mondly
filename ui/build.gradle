@@ -23,19 +23,43 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
+
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_17
     targetCompatibility JavaVersion.VERSION_17
   }
+
   kotlinOptions {
     jvmTarget = '17'
   }
 
+  buildFeatures {
+    compose true
+  }
+
+  composeOptions {
+    kotlinCompilerExtensionVersion "1.5.1"
+  }
 }
 
 dependencies {
 
   implementation libs.androidx.core.ktx
   implementation libs.androidx.appcompat
+  implementation libs.androidx.ui.unit.android
+  implementation libs.androidx.ui.text.android
+  implementation libs.androidx.foundation.android
+  implementation libs.androidx.compose.material.material
+  implementation libs.androidx.compose.ui.ui.tooling.preview
+  implementation libs.androidx.material.icons.extended
+  implementation libs.androidx.compiler
+  implementation libs.androidx.compose.ui.ui.tooling.preview
+  implementation libs.androidx.constraintlayout.compose
+  implementation libs.androidx.ui.tooling.preview.android
+  implementation libs.ui
   implementation libs.material
+
+  implementation(libs.coil.compose)
+
+  debugImplementation libs.ui.tooling
 }
