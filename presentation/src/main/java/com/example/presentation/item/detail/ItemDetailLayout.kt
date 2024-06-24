@@ -1,6 +1,9 @@
 package com.example.presentation.item.detail
 
+import android.content.res.Configuration
 import android.util.Log
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,6 +14,7 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,10 +53,25 @@ fun ItemDetailLayout(
     val item by viewModel.item.collectAsStateWithLifecycle()
 
     if (item is ItemDetailUIModel.Loading) {
+        EmptyLayout()
         viewModel.getItem(id)
         Log.i("ITEMDETAIL", "getItem")
+    } else {
+        val configuration = LocalConfiguration.current
+        val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        if (isLandscape) {
+            LandscapeLayout(item, navigateUp)
+        } else {
+            PortraitLayout(item, navigateUp)
+        }
     }
+}
 
+@Composable
+fun PortraitLayout(
+    item: ItemDetailUIModel,
+    navigateUp: () -> Unit
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -92,7 +112,8 @@ fun ItemDetailLayout(
                             start = 8.dp,
                             end = 8.dp,
                             top = 8.dp,
-                            bottom = 8.dp)
+                            bottom = 8.dp
+                        )
                 )
 
                 MondlyText(
@@ -104,13 +125,68 @@ fun ItemDetailLayout(
                             start = 8.dp,
                             end = 8.dp,
                             top = 8.dp,
-                            bottom = 8.dp)
+                            bottom = 8.dp
+                        )
                 )
 
             }
         }
     }
 }
+
+@Composable
+fun LandscapeLayout(
+    item: ItemDetailUIModel,
+    navigateUp: () -> Unit
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        MondlyToolbar(
+            title = stringResource(R.string.app_name),
+            onBackPressed = navigateUp,
+        )
+
+        if (item is ItemDetailUIModel.Loading) {
+            EmptyLayout()
+            Log.i("ITEMDETAIL", "EMPTY")
+        } else {
+            Log.i("ITEMDETAIL", "NOT_EMPTY")
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                MondlyText(
+                    text = (item as ItemDetailUIModel.Content).title,
+                    style = TextStyle.Title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 8.dp,
+                            bottom = 8.dp
+                        )
+                )
+
+                MondlyText(
+                    text = (item as ItemDetailUIModel.Content).description,
+                    style = TextStyle.Body,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            start = 8.dp,
+                            end = 8.dp,
+                            top = 8.dp,
+                            bottom = 8.dp
+                        )
+                )
+
+            }
+        }
+    }
+}
+
 
 @Composable
 fun EmptyLayout() {
