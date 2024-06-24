@@ -14,6 +14,9 @@ interface ItemDAO {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertItems(items: List<ItemEntity>)
 
+    @Query("SELECT * FROM items WHERE id = :id")
+    fun getItem(id: Long): ItemEntity?
+
     @Query("SELECT * FROM items")
     fun getAllItems(): List<ItemEntity>
 }

@@ -21,6 +21,8 @@ dependencyResolutionManagement {
 
 rootProject.name = "Mondly"
 include ':app'
-include ':ui'
+include ':uilib'
 include ':domain'
 include ':data'
+include ':presentation'
+include ':presentation'

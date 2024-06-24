@@ -10,4 +10,5 @@ data class ItemEntity(
     @PrimaryKey(autoGenerate = false) val id: Long = 0,
     val name: String = NotDefined,
     val description: String = NotDefined,
+    val imageURL: String = NotDefined,
 )
