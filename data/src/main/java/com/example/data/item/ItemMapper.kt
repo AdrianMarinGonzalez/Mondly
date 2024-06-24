@@ -29,6 +29,21 @@ class ItemMapper {
     }
 
     fun mapToEntity(items: List<ItemDTO>): List<ItemEntity> =
-        items.map { ItemEntity(id = it.id.toLong(), name = it.name, description = it.description) }
+        items.map {
+            ItemEntity(
+                id = it.id.toLong(),
+                name = it.name,
+                description = it.description,
+                imageURL = it.imageUrl
+            )
+        }
 
+    fun mapFromEntity(entity: List<ItemEntity>) = entity.map { mapFromEntity(it) }
+
+    fun mapFromEntity(entity: ItemEntity) = ItemDTO(
+        id = entity.id.toString(),
+        name = entity.name,
+        description = entity.description,
+        imageUrl = entity.imageURL
+    )
 }

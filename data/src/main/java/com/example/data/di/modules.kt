@@ -10,17 +10,18 @@ import com.example.data.item.ItemRepositoryImpl
 import com.example.data.item.db.ItemDAO
 import com.example.data.item.network.ItemNetworkDatasource
 import com.example.data.item.network.ItemService
+import com.example.domain.repository.ItemRepository
+import okhttp3.OkHttpClient
 import org.koin.dsl.module
 import retrofit2.Retrofit
 
-fun getModules(applicationContext: Context) = listOf(
+fun getModule(applicationContext: Context) = listOf(
     module {
-        single { provideHttpClient() }
-        single { provideRetrofit(get()) }
-        single { provideItemService(get()) }
-        factory { ItemNetworkDatasource(get()) }
-    },
-    module {
+        factory<HttpClient> { HttpClient() }
+        factory<OkHttpClient> { provideOkHttpClient(get()) }
+        factory<Retrofit> { RetrofitInstance(get()).get() }
+        single<ItemService> { provideItemService(get()) }
+        factory<ItemNetworkDatasource> { ItemNetworkDatasource(get()) }
         single {
             Room.databaseBuilder(
                 applicationContext,
@@ -32,18 +33,14 @@ fun getModules(applicationContext: Context) = listOf(
             val database = get<MondlyDB>()
             database.itemDAO()
         }
-    },
-    module {
-        factory { ItemRepositoryImpl(get(), get(), get()) }
+        factory<ItemMapper> { ItemMapper() }
+        factory<ItemRepository> { ItemRepositoryImpl(get(), get(), get()) }
     }
 )
 
-private fun provideHttpClient() =
-    HttpClient().buildOKHttpClient()
 
-private fun provideRetrofit(httpClient: HttpClient) = RetrofitInstance(httpClient).get()
+private fun provideOkHttpClient(client: HttpClient): OkHttpClient =
+    client.buildOKHttpClient()
 
 private fun provideItemService(retrofit: Retrofit): ItemService =
     retrofit.create(ItemService::class.java)
-
-private fun provideItemMapper() = ItemMapper()

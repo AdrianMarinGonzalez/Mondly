@@ -5,7 +5,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
 
-class HttpClient  {
+class HttpClient constructor() {
     fun buildOKHttpClient(): OkHttpClient {
         val client = OkHttpClient.Builder()
         client.apply {

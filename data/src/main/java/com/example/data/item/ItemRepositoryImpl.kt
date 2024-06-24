@@ -1,7 +1,6 @@
 package com.example.data.item
 
 import com.example.data.item.db.ItemDAO
-import com.example.data.item.db.ItemEntity
 import com.example.data.item.network.ItemNetworkDatasource
 import com.example.domain.base.Error
 import com.example.domain.base.Failure
@@ -9,8 +8,6 @@ import com.example.domain.base.OperationResult
 import com.example.domain.base.Success
 import com.example.domain.base.map
 import com.example.domain.base.mapFailure
-import com.example.domain.base.peek
-import com.example.domain.base.whenEmpty
 import com.example.domain.model.ItemDTO
 import com.example.domain.repository.ItemRepository
 
@@ -27,10 +24,17 @@ class ItemRepositoryImpl(
                 itemDAO.insertItems(itemMapper.mapToEntity(result))
                 return Success(result)
             }
-            .mapFailure { return Failure(Error.NotFound()) }
+            .mapFailure {
+                val fallback = itemDAO.getAllItems()
+                if (fallback.isNotEmpty()) {
+                    return Success(itemMapper.mapFromEntity(fallback))
+                } else return Failure(Error.NotFound())
+            }
     }
 
     override fun get(id: String): OperationResult<ItemDTO, Error> {
-        return Failure(Error.NotFound())
+        itemDAO.getItem(id.toLong())?.let { entity ->
+            return Success(itemMapper.mapFromEntity(entity))
+        } ?: return Failure(Error.NotFound())
     }
 }

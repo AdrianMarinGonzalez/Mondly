@@ -8,6 +8,6 @@ import retrofit2.http.Query
 
 interface ItemService {
 
-    @GET("/mondly_android_code_task_ json")
+    @GET("/mondly_android_code_task_json")
     fun getItems(): Call<GetItemsResponse>
 }

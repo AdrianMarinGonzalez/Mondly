@@ -6,6 +6,6 @@ import com.example.domain.model.ItemDTO
 import com.example.domain.repository.ItemRepository
 
 
-class GetItemUseCase constructor(private val itemRepository: ItemRepository) {
+class GetItemUseCase(private val itemRepository: ItemRepository) {
     fun execute(id: String): OperationResult<ItemDTO, Error> = itemRepository.get(id)
 }
