@@ -1,3 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name">presentation</string>
+  <string name="app_name">Mondly\n</string>
+  <string name="back_alert_title">Closing the app...</string>
+  <string name="back_alert_body">Do you want to exit the app?</string>
+  <string name="back_alert_positive">I\'ll stay!</string>
+  <string name="back_alert_negative">EXIT</string>
+  <string name="error_alert_title">Ooops! Something went wrong</string>
+  <string name="error_alert_body">Looks like something went wrong. Please try again later</string>
+  <string name="error_alert_positive">Close</string>
 </resources>
